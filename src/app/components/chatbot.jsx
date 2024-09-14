@@ -1,14 +1,15 @@
 'use client';
 import React, { useState } from 'react';
 
-
 const Chatbot = () => {
   const [messages, setMessages] = useState([
     { sender: 'BullDawg-Wiser', text: 'Hi, how can I help you today?' },
     { sender: 'User', text: 'whatup' },
     { sender: 'BullDawg-Wiser', text: 'Sorry, I couldn\'t find any information in the documentation about that.' },
   ]);
+
   const [inputText, setInputText] = useState('');
+  const [isOpen, setIsOpen] = useState(false); // State to toggle chat window
 
   const handleInputChange = (e) => {
     setInputText(e.target.value);
@@ -23,11 +24,20 @@ const Chatbot = () => {
     }
   };
 
+  const toggleChatWindow = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <div className="fixed bottom-4 right-4 inline-flex items-center justify-center text-sm font-medium">
+      {/* Button to toggle chat window */}
       <button
         className="fixed bottom-4 right-4 inline-flex items-center justify-center text-sm font-medium disabled:pointer-events-none disabled:opacity-50 border rounded-full w-16 h-16 bg-black hover:bg-gray-700 m-0 cursor-pointer border-gray-200 bg-none p-0 normal-case leading-5 hover:text-gray-900"
-        type="button" aria-haspopup="dialog" aria-expanded="false" data-state="closed">
+        type="button"
+        aria-haspopup="dialog"
+        aria-expanded={isOpen} // Update aria-expanded based on state
+        onClick={toggleChatWindow}
+      >
         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
           className="text-white block border-gray-200 align-middle">
@@ -35,9 +45,12 @@ const Chatbot = () => {
         </svg>
       </button>
 
-      <div style={{ boxShadow: '0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05)' }}
-        className="fixed bottom-[calc(4rem+1.5rem)] right-0 mr-4 bg-white p-6 rounded-lg border border-[#e5e7eb] w-[440px] h-[634px]">
-
+      <div
+        className={`fixed bottom-[calc(4rem+1.5rem)] right-0 mr-4 bg-white p-6 rounded-lg border border-[#e5e7eb] w-[440px] h-[634px] transition-all duration-300 ease-in-out transform ${
+          isOpen ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 pointer-events-none'
+        }`}
+        style={{ boxShadow: '0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05)' }}
+      >
         {/* Heading */}
         <div className="flex flex-col space-y-1.5 pb-6">
           <h2 className="font-semibold text-lg tracking-tight">Chatbot</h2>
@@ -46,10 +59,7 @@ const Chatbot = () => {
         {/* Chat Container */}
         <div className="pr-4 h-[474px]" style={{ minWidth: '100%', display: 'table' }}>
           {messages.map((message, index) => (
-          <>
-            { }
             <div key={index} className="flex gap-3 my-4 text-gray-600 text-sm flex-1">
-            
               <span className="relative flex shrink-0 overflow-hidden rounded-full w-8 h-8">
                 <div className={`rounded-full bg-gray-100 border p-1 ml-0  ${message.sender === 'BullDawg-Wiser' ? 'text-black' : ''}`}>
                   <svg stroke="none" fill="black" strokeWidth="0" viewBox="0 0 16 16" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
@@ -64,11 +74,8 @@ const Chatbot = () => {
                 <span className="block text-left font-normal">{message.text}</span>
               </p>
             </div>
-            </>
           ))}
         </div>
-
-        {/* Input box */}
         <div className="flex items-center pt-6">
           <form className="flex items-center justify-center w-full space-x-2" onSubmit={handleSendMessage}>
             <input
