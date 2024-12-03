@@ -10,6 +10,7 @@ const Chatbot = () => {
   const [inputText, setInputText] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const inputRef = useRef(null);
   const messagesEndRef = useRef(null);
 
@@ -119,7 +120,14 @@ const Chatbot = () => {
   };
 
   const toggleChatWindow = () => {
+    if (isOpen) {
+      setIsExpanded(false); // Reset expansion if closing
+    }
     setIsOpen(!isOpen);
+  };
+
+  const toggleExpandWindow = () => {
+    setIsExpanded(!isExpanded);
   };
 
   return (
@@ -141,14 +149,22 @@ const Chatbot = () => {
       </button>
 
       <div
-        className={`fixed bottom-[calc(4rem+1.5rem)] right-0 mr-4 bg-white p-6 rounded-lg border border-[#e5e7eb] w-[440px] h-[634px] transition-all duration-300 ease-in-out transform flex flex-col ${
+        className={`fixed bottom-[calc(4rem+1.5rem)] right-0 mr-4 bg-white p-6 rounded-lg border border-[#e5e7eb] ${
+          isExpanded ? 'w-[1000px] h-[640px]' : 'w-[440px] h-[634px]'
+        } transition-all duration-300 ease-in-out transform flex flex-col ${
           isOpen ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 pointer-events-none'
         }`}
         style={{ boxShadow: '0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05)' }}
       >
+
         {/* Heading */}
-        <div className="flex-none pb-6">
-          <h2 className="font-semibold text-lg tracking-tight text-black">Chatbot</h2>
+        <div className="flex pb-6">
+          <button className='flex items-center justify-center p-2 rounded-full hover:bg-gray-300' onClick={toggleExpandWindow}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" className='rotate-90'>
+            <path d="M344 0L488 0c13.3 0 24 10.7 24 24l0 144c0 9.7-5.8 18.5-14.8 22.2s-19.3 1.7-26.2-5.2l-39-39-87 87c-9.4 9.4-24.6 9.4-33.9 0l-32-32c-9.4-9.4-9.4-24.6 0-33.9l87-87L327 41c-6.9-6.9-8.9-17.2-5.2-26.2S334.3 0 344 0zM168 512L24 512c-13.3 0-24-10.7-24-24L0 344c0-9.7 5.8-18.5 14.8-22.2s19.3-1.7 26.2 5.2l39 39 87-87c9.4-9.4 24.6-9.4 33.9 0l32 32c9.4 9.4 9.4 24.6 0 33.9l-87 87 39 39c6.9 6.9 8.9 17.2 5.2 26.2s-12.5 14.8-22.2 14.8z"/>
+            </svg>
+          </button>
+          <h2 className="font-semibold text-lg tracking-tight text-black translate-x-4">Chatbot</h2>
         </div>
 
         {/* Chat Container */}
