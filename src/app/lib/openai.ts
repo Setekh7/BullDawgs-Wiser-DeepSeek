@@ -25,13 +25,7 @@ export async function askQuestion(message: string, file: File | null = null) {
       const beforeCount = beforeMessages.data.length;
     
     if (file) {
-      // Convert File to Buffer
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
       
-      // Create a temporary file
-      const tempFilePath = path.join(process.cwd(), 'tmp', file.name);
-      writeFileSync(tempFilePath, buffer);
       
       // Upload the file to OpenAI using the file path
       const uploadedFile = await openai.files.create({
@@ -42,7 +36,7 @@ export async function askQuestion(message: string, file: File | null = null) {
       // Add the message to the thread
       await openai.beta.threads.messages.create(threadId, {
         role: 'user',
-        content: message,
+        content: message + " This pdf is my degree works file.",
         attachments: [{
             file_id: uploadedFile.id,
             tools: [{ type: "file_search" }] 

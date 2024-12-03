@@ -1,9 +1,10 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 
+
 const Chatbot = () => {
   const [messages, setMessages] = useState([
-    { sender: 'BullDawg-Wiser', text: 'Hi, how can I help you today?' },
+    { sender: 'BullDawg-Wiser', text: 'Hi! I am BullDawg-Wiser, your AI-driven academic advisor. Please attach your degree works report or ask me a question to get started.' },
   ]);
 
   const [inputText, setInputText] = useState('');
@@ -123,6 +124,7 @@ const Chatbot = () => {
 
   return (
     <div className="fixed bottom-4 right-4 inline-flex items-center justify-center text-sm font-medium">
+      
       {/* Button to toggle chat window */}
       <button
         className="fixed bottom-4 right-4 inline-flex items-center justify-center text-sm font-medium disabled:pointer-events-none disabled:opacity-50 border rounded-full w-16 h-16 bg-black hover:bg-gray-700 m-0 cursor-pointer border-gray-200 bg-none p-0 normal-case leading-5 hover:text-gray-900"
@@ -179,7 +181,7 @@ const Chatbot = () => {
           <form className="flex items-center justify-center w-full space-x-2" onSubmit={handleSendMessage}>
             <div className="relative w-full">
               <div>
-                <input type="file" ref={inputRef} hidden onChange={handleFileChange}/>
+                <input type="file" ref={inputRef} hidden accept=".pdf,application/pdf" onChange={handleFileChange}/>
                 <button 
                   type="button" 
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 focus:outline-none"
