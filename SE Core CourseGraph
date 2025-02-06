@@ -1,3 +1,5 @@
+// Graph with only core SE classes. No tech electives. Starting small, gonna add more assuming this method works
+
 class CourseGraph {
     constructor() {
         this.graph = {};      // Adjacency list representation of the graph
