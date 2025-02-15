@@ -1,13 +1,8 @@
-// Graph with only core SE classes. No tech electives. Starting small, gonna add more assuming this method works
+export class CourseGraph {
+    private graph: { [key: string]: string[] } = {};
+    private inDegree: { [key: string]: number } = {};
 
-class CourseGraph {
-    private graph: { [key: string]: string[] };
-    private inDegree: { [key: string]: number };
-
-    constructor() {
-        this.graph = {};      // Adjacency list representation of the graph
-        this.inDegree = {};   // Tracks number of prerequisites for each course
-    }
+    constructor() {}
 
     addCourse(course: string, prerequisites: string[]): void {
         if (!this.graph[course]) this.graph[course] = [];
@@ -21,6 +16,7 @@ class CourseGraph {
     }
 
     getAvailableCourses(completedCourses: string[]): string[] {
+        const localInDegree = { ...this.inDegree };
         let queue = [...completedCourses];
         let available = new Set<string>();
 
@@ -29,8 +25,8 @@ class CourseGraph {
 
             if (this.graph[course]) {
                 this.graph[course].forEach(nextCourse => {
-                    this.inDegree[nextCourse] -= 1;
-                    if (this.inDegree[nextCourse] === 0) {
+                    localInDegree[nextCourse] -= 1;
+                    if (localInDegree[nextCourse] === 0) {
                         available.add(nextCourse);
                     }
                 });
@@ -41,8 +37,8 @@ class CourseGraph {
     }
 }
 
-// Initialize graph
-const courseGraph = new CourseGraph();
+// Create a default instance if needed
+export const courseGraph = new CourseGraph();
 
 // Default Courses
 // Semester 1
@@ -78,7 +74,6 @@ courseGraph.addCourse("CSE 4223", ["CSE 4214"]); // Manage SW Project
 courseGraph.addCourse("CSE 3763", []); // Legal and Ethical Issues
 courseGraph.addCourse("CSE 3223", ["CSE 4214"]); // SE Senior Project 2
 
-
 // Example usage
-const completed = ["CSE 1284", "CSE 1384", "CSE 2383"];
-console.log("Available Courses:", courseGraph.getAvailableCourses(completed));
+//const completed = ["CSE 1284", "CSE 1384", "CSE 2383"];
+//console.log("Available Courses:", courseGraph.getAvailableCourses(completed));
