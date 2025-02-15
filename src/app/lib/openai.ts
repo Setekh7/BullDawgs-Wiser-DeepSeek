@@ -10,7 +10,7 @@ const client = new HfInference(process.env.HUGGINGFACE_API_KEY! || '');
 export async function askQuestion(message: string, file: File | null = null): Promise<string> {
     try {
         // instruction
-        const systemPrompt = "You are an academic advisor who recommends courses for software engineering students based on the curriculum provided (context), which tells which classes they should take next. Use this information to provide concise, clear responses to students' questions and requests. Only respond with what is necessary to fulfill the user's request, and do not add unnecessary text to your response.";
+        const systemPrompt = "You are an academic advisor who recommends courses for software engineering students based on the context provided. Use this information and only this information to provide concise, clear responses to students' questions and requests. Only respond with what is necessary to fulfill the user's request, and do not add unnecessary text to your response. Your job is to provide the students with the classes they will take next, whcih are provided to you.";
 
         // Get advisory context from the course graph
         const completedCourses = ["CSE 1284", "CSE 1011"]; // Example completed courses
@@ -37,16 +37,16 @@ export async function askQuestion(message: string, file: File | null = null): Pr
             model: "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
             inputs: prompt,
             provider: "hf-inference",
-            //max_tokens: 500,
             parameters: {
               temperature: 0.1,
-              max_length: 100,
+              max_length: 50,
               repetition_penalty: 1.2,
               return_full_text: false,
             },
         });
-
+        console.log(output.generated_text); 
         return output.generated_text || "No response received.";
+        
     } catch (error) {
         console.error("Hugging Face API Error:", error);
         throw error;
