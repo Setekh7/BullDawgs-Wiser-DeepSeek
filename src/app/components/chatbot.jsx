@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 
 const Chatbot = () => {
@@ -182,8 +183,10 @@ const Chatbot = () => {
                   </div>
                 </span>
                 <div className="flex-1">
-                  <p className="font-bold text-gray-700">{message.sender === 'BullDawg-Wiser' ? 'BullDawg-Wiser' : 'You'}</p>
-                  <p className="mt-1 break-words">{message.text}</p>
+                  <p className="font-bold text-gray-700">
+                    {message.sender === 'BullDawg-Wiser' ? 'BullDawg-Wiser' : 'You'}
+                  </p>
+                  <ReactMarkdown className="mt-1 break-words">{message.text}</ReactMarkdown>
                 </div>
               </div>
             ))}
