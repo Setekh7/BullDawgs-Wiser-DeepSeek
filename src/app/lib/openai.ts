@@ -1,105 +1,61 @@
 // src/app/lib/openai.ts
-import OpenAI from 'openai';
-import { writeFileSync } from 'fs';
-import path from 'path';
-import { VectorStores } from 'openai/resources/beta/index.mjs';
+// import { writeFileSync } from 'fs';
+// import path from 'path';
+// import { VectorStores } from 'openai/resources/beta/index.mjs';
+import { HfInference } from "@huggingface/inference";
+import { courseGraph } from "@/app/lib/CourseGraph";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const client = new HfInference(process.env.HUGGINGFACE_API_KEY! || '');
 
+export async function askQuestion(message: string, file: File | null = null): Promise<string> {
+    try {
+        // instruction
+        const systemPrompt = "You are an academic advisor who recommends courses for software engineering students based on the context provided. Use this information and only this information to provide concise, clear responses to students' questions and requests. Only respond with what is necessary to fulfill the user's request, such as the class numbers of the classes they should take. DO NOT add your thoughts, reasoning, or unnecessary text in your response. Your job is to provide the students with the classes they will take next, which are provided to you.";
 
-let threadId: string | null = null;
+        // Get advisory context from the course graph
+        const completedCourses = ["CSE 1284", "CSE 1011"]; // Example completed courses
+        const availableCourses = courseGraph.getAvailableCourses(completedCourses);
 
-export async function askQuestion(message: string, file: File | null = null) {
-    const assistantID =process.env.OPENAI_ASSISTANT_ID;
-  try {
-
-    if (!threadId) {
-        const thread = await openai.beta.threads.create();
-        threadId = thread.id;
-      }
-
-      // Store the current number of messages before adding new one
-      const beforeMessages = await openai.beta.threads.messages.list(threadId);
-      const beforeCount = beforeMessages.data.length;
-    
-    if (file) {
-      
-      
-      // Upload the file to OpenAI using the file path
-      const uploadedFile = await openai.files.create({
-        file: file,
-        purpose: 'assistants',
-      });
-
-      // Add the message to the thread
-      await openai.beta.threads.messages.create(threadId, {
-        role: 'user',
-        content: message + " This pdf is my degree works file.",
-        attachments: [{
-            file_id: uploadedFile.id,
-            tools: [{ type: "file_search" }] 
-          }]
-      });
-
-    } else {
-
-
-
-      // Add the message to the thread
-      await openai.beta.threads.messages.create(threadId, {
-        role: 'user',
-        content: message,
-      });
-
-      
-    }
-
-
-    // Run the assistant
-    const run = await openai.beta.threads.runs.create(
-        threadId, 
-        {
-        assistant_id: assistantID!, 
-      });
-
-      // Poll for the completion
-      let runStatus = await openai.beta.threads.runs.retrieve(threadId, run.id);
-      
-      while (runStatus.status !== 'completed') {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        runStatus = await openai.beta.threads.runs.retrieve(threadId, run.id);
+        // Create a summary of available courses
+        const courseSummary = availableCourses.length > 0 ? `The following courses are available:\n• ${availableCourses.join("\n• ")}` : "There are no available courses for the user.";
+        //console.log(availableCourses.length > 0 ? `The following courses are available:\n• ${availableCourses.join("\n• ")}` : "There are no available courses.");
         
-        if (runStatus.status === 'failed') {
-          throw new Error('Assistant run failed');
-        }
-      }
+        // Delimiter
+        let prompt = `${systemPrompt}\n\nContext: ${courseSummary}\n\nUser: ${message}\n\n`;
+        //if (file) {
+            prompt += "User attached file contains additional context.\n";
+            /* <-- Process file contents here --> */ 
+            prompt += "Classes passed:";
+            // using completedCourses
+            prompt += `\n• ${completedCourses.join("\n• ")}`;
+            //prompt += `\n\n${fileText}`;
+        //}
+        prompt += "\n\nResponse:\n";
+        console.log(prompt);
 
-      // Get messages after the run is complete
-      const afterMessages = await openai.beta.threads.messages.list(threadId, {
-        order: 'asc',
-        limit: 100
-    });
+        const output = await client.textGeneration({
+            model: "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+            inputs: prompt,
+            provider: "hf-inference",
+            parameters: {
+              temperature: 0.1,
+              max_length: 50,
+              repetition_penalty: 1.2,
+              return_full_text: false,
+            },
+        });
+        // const output = await client.textGeneration({
+        //     model: "mistralai/Mistral-Small-24B-Instruct-2501",
+        //     messages: [{ role: "user", content: prompt }],
+        //     provider: "fireworks-ai",
+        //     max_tokens: 150,
+        // })
 
-    // Find the new assistant message
-    const newMessages = afterMessages.data.slice(beforeCount);
-    const lastAssistantMessage = newMessages
-        .filter(message => message.role === 'assistant')
-        .pop();
-
-    if (!lastAssistantMessage) {
-        throw new Error('No assistant response found');
+        console.log(output.generated_text); 
+        return output.generated_text || "No response received.";
+        
+    } catch (error) {
+        console.error("Hugging Face API Error:", error);
+        throw error;
     }
-
-    return lastAssistantMessage.content[0]?.text?.value || 'No response received';
-  } catch (error) {
-    console.error('OpenAI API Error:', error);
-    throw error;
-  }
 }
-
-// Function to reset thread if needed
-export async function resetThread() {
-    threadId = null;
-  }
