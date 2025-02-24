@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
+// Load custom fonts
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -13,22 +14,21 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
+// Metadata for SEO
 export const metadata: Metadata = {
-  title: "Bulldawgs Wiser",
-  description: "An AI-driven advisement tool",
+  title: "BullDawg-Wiser - AI Academic Advisor",
+  description: "An AI-driven advisement tool for university students.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen w-screen bg-gray-100 text-gray-900`}
       >
-        {children}
+        <main className="flex h-full w-full">{children}</main>
       </body>
     </html>
   );
