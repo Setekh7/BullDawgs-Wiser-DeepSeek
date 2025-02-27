@@ -1,6 +1,7 @@
 export class CourseGraph {
     private graph: { [key: string]: string[] } = {};
     private inDegree: { [key: string]: number } = {};
+    private courseARate: { [key: string]: number } = {}; // Stores A rate percentages
 
     constructor() {}
 
@@ -15,54 +16,40 @@ export class CourseGraph {
         });
     }
 
-    getAvailableCourses(completedCourses: string[]): string[] {
+    assignARate(course: string, percentage: number): void {
+        if (this.graph[course] || this.inDegree[course] !== undefined) {
+            this.courseARate[course] = percentage;
+            console.log(`Assigned A rate of ${percentage}% to course ${course}`);
+        } else {
+            console.log(`Error: Course ${course} does not exist.`);
+        }
+    }
+
+    getAvailableCourses(completedCourses: string[]): { course: string; aRate: string }[] {
         const localInDegree = { ...this.inDegree };
         let queue = [...completedCourses];
-        let available = new Map<string, number>();
-    
-        // Cache to store total dependency counts to avoid recomputing
-        let dependencyCountCache: { [key: string]: number } = {};
-    
-        // Helper function: Recursively count total downstream dependencies
-        const countDependencies = (course: string): number => {
-            if (dependencyCountCache[course] !== undefined) {
-                return dependencyCountCache[course];
-            }
-    
-            let count = 0;
-            if (this.graph[course]) {
-                for (const nextCourse of this.graph[course]) {
-                    count += 1 + countDependencies(nextCourse);
-                }
-            }
-    
-            dependencyCountCache[course] = count;
-            return count;
-        };
-    
-        // Process available courses
+        let available = new Set<string>();
+
         while (queue.length > 0) {
             let course = queue.shift()!;
             if (this.graph[course]) {
                 this.graph[course].forEach(nextCourse => {
                     localInDegree[nextCourse] -= 1;
                     if (localInDegree[nextCourse] === 0) {
-                        let priority = countDependencies(nextCourse); // Compute full impact
-                        available.set(nextCourse, priority);
+                        available.add(nextCourse);
                     }
                 });
             }
         }
-    
-        // Sort available courses by their total impact (higher = more important)
-        return Array.from(available.entries())
-            .sort((a, b) => b[1] - a[1]) // Sort in descending order of impact
-            .map(([course]) => course);
+
+        return [...available].map(course => ({
+            course,
+            aRate: `${this.courseARate[course] || 0}%` // Return A rate or "0%" if not set
+        }));
     }
-    
 }
 
-// Create a default instance if needed
+// Create an instance
 export const courseGraph = new CourseGraph();
 
 // Default Courses
@@ -105,11 +92,17 @@ courseGraph.addCourse("1113", []);
 courseGraph.addCourse("1213", []);
 courseGraph.addCourse("1134", []);
 
-
 // Level 2 Science Courses 
 courseGraph.addCourse("1123", ["1113"]); // Requires 1113
 courseGraph.addCourse("1223", ["1213"]); // Requires 1213
 courseGraph.addCourse("1144", ["1134"]); // Requires 1134
+//Science A Rates
+courseGraph.assignARate("1113", 28);
+courseGraph.assignARate("1123", 29);
+courseGraph.assignARate("1213", 24);
+courseGraph.assignARate("1223", 25);
+courseGraph.assignARate("1134", 27);
+courseGraph.assignARate("1144", 17);
 
 // Example usage
 //const completed = ["CSE 1284", "CSE 1384", "CSE 2383"];
