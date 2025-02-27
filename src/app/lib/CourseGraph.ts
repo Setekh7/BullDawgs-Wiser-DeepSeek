@@ -18,23 +18,48 @@ export class CourseGraph {
     getAvailableCourses(completedCourses: string[]): string[] {
         const localInDegree = { ...this.inDegree };
         let queue = [...completedCourses];
-        let available = new Set<string>();
-
+        let available = new Map<string, number>();
+    
+        // Cache to store total dependency counts to avoid recomputing
+        let dependencyCountCache: { [key: string]: number } = {};
+    
+        // Helper function: Recursively count total downstream dependencies
+        const countDependencies = (course: string): number => {
+            if (dependencyCountCache[course] !== undefined) {
+                return dependencyCountCache[course];
+            }
+    
+            let count = 0;
+            if (this.graph[course]) {
+                for (const nextCourse of this.graph[course]) {
+                    count += 1 + countDependencies(nextCourse);
+                }
+            }
+    
+            dependencyCountCache[course] = count;
+            return count;
+        };
+    
+        // Process available courses
         while (queue.length > 0) {
             let course = queue.shift()!;
-
             if (this.graph[course]) {
                 this.graph[course].forEach(nextCourse => {
                     localInDegree[nextCourse] -= 1;
                     if (localInDegree[nextCourse] === 0) {
-                        available.add(nextCourse);
+                        let priority = countDependencies(nextCourse); // Compute full impact
+                        available.set(nextCourse, priority);
                     }
                 });
             }
         }
-
-        return Array.from(available);
+    
+        // Sort available courses by their total impact (higher = more important)
+        return Array.from(available.entries())
+            .sort((a, b) => b[1] - a[1]) // Sort in descending order of impact
+            .map(([course]) => course);
     }
+    
 }
 
 // Create a default instance if needed
@@ -77,3 +102,4 @@ courseGraph.addCourse("CSE 3223", ["CSE 4214"]); // SE Senior Project 2
 // Example usage
 //const completed = ["CSE 1284", "CSE 1384", "CSE 2383"];
 //console.log("Available Courses:", courseGraph.getAvailableCourses(completed));
+// Tech electives
