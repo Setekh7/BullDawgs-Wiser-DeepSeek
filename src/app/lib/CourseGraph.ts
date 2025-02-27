@@ -88,21 +88,35 @@ courseGraph.addCourse("CSE 3223", ["CSE 4214"]); // SE Senior Project 2
 
 //Required Sciences
 // Level 1 Science Courses
-courseGraph.addCourse("1113", []);
-courseGraph.addCourse("1213", []);
-courseGraph.addCourse("1134", []);
+courseGraph.addCourse("PH 1113", []);
+courseGraph.addCourse("CH 1213", []);
+courseGraph.addCourse("BIO 1134", []);
 
 // Level 2 Science Courses 
-courseGraph.addCourse("1123", ["1113"]); // Requires 1113
-courseGraph.addCourse("1223", ["1213"]); // Requires 1213
-courseGraph.addCourse("1144", ["1134"]); // Requires 1134
+courseGraph.addCourse("PH 1123", ["PH 1113"]); // Requires 1113
+courseGraph.addCourse("CH 1223", ["CH 1213"]); // Requires 1213
+courseGraph.addCourse("BIO 1144", ["BIO 1134"]); // Requires 1134
 //Science A Rates
-courseGraph.assignARate("1113", 28);
-courseGraph.assignARate("1123", 29);
-courseGraph.assignARate("1213", 24);
-courseGraph.assignARate("1223", 25);
-courseGraph.assignARate("1134", 27);
-courseGraph.assignARate("1144", 17);
+courseGraph.assignARate("PH 1113", 28);
+courseGraph.assignARate("PH 1123", 29);
+courseGraph.assignARate("CH 1213", 24);
+courseGraph.assignARate("CH 1223", 25);
+courseGraph.assignARate("BIO 1134", 27);
+courseGraph.assignARate("BIO 1144", 17);
+courseGraph.addCourse("
+//Tech Electives
+courseGraph.addCourse("CSE 3713", ["CSE 1284"]);
+courseGraph.assignARate("CSE 3713", 80);
+courseGraph.addCourse("CSE 4153", ["CSE 3724"]);
+courseGraph.assignARate("CSE 4153", 61);
+courseGraph.addCourse("CSE 4163", ["CSE 3183"]);
+courseGraph.addCourse("CSE 4173", ["CSE 2383"]);
+courseGraph.assignARate("CSE 4173", 27);
+courseGraph.addCourse("CSE 4293", ["CSE 4633"];
+courseGraph.addCourse("CSE 4353", ["CSE 3724"];
+courseGraph.addCourse("CSE 4363", ["CSE 3183"];
+courseGraph.assignARate("CSE 4363", 51);
+
 
 // Example usage
 //const completed = ["CSE 1284", "CSE 1384", "CSE 2383"];
