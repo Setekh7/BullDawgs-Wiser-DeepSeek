@@ -101,15 +101,15 @@ courseGraph.addCourse("CSE 3223", ["CSE 4214"]); // SE Senior Project 2
 
 //Required Sciences
 // Level 1 Science Courses
-courseGraph.addCourse("1113", []);
-courseGraph.addCourse("1213", []);
-courseGraph.addCourse("1134", []);
+courseGraph.addCourse("PH 1113", []);
+courseGraph.addCourse("CH 1213", []);
+courseGraph.addCourse("BIO 1134", []);
 
 
 // Level 2 Science Courses 
-courseGraph.addCourse("1123", ["1113"]); // Requires 1113
-courseGraph.addCourse("1223", ["1213"]); // Requires 1213
-courseGraph.addCourse("1144", ["1134"]); // Requires 1134
+courseGraph.addCourse("PH 1123", ["PH 1113"]); // Requires 1113
+courseGraph.addCourse("CH 1223", ["CH 1213"]); // Requires 1213
+courseGraph.addCourse("BIO 1144", ["BIO 1134"]); // Requires 1134
 
 // Example usage
 //const completed = ["CSE 1284", "CSE 1384", "CSE 2383"];
