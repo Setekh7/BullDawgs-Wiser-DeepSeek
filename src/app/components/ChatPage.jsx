@@ -6,7 +6,7 @@ import ChatInput from "./ChatInput";
 
 const ChatPage = () => {
   const [messages, setMessages] = useState([
-    { sender: "BullDawg-Wiser", text: "Hi! I am BullDawg-Wiser, your AI-driven academic advisor. Please attach your degree works report or ask me a question to get started." },
+    { sender: "BullDawg-Wiser", text: "Hi! I am BullDawg-Wiser, your AI-driven academic advisor. Please ask me a question to get started." },
   ]);
   const [isLoading, setIsLoading] = useState(false);
 

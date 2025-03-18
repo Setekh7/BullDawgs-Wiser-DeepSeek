@@ -44,15 +44,16 @@ export async function askQuestion(message: string, file: File | null = null): Pr
               return_full_text: false,
             },
         });
-        // const output = await client.textGeneration({
-        //     model: "mistralai/Mistral-Small-24B-Instruct-2501",
-        //     messages: [{ role: "user", content: prompt }],
-        //     provider: "fireworks-ai",
-        //     max_tokens: 150,
-        // })
+        
+        const cleanedText = output.generated_text
+        ? output.generated_text.replace(/<\/think>/g, '')
+                              .replace(/<think>/g, '')
+                              .replace(/\[.*?\]/g, '') // Optional: removes content in square brackets
+                              .trim()
+            : "No response received.";
 
-        console.log(output.generated_text); 
-        return output.generated_text || "No response received.";
+        console.log(cleanedText); 
+        return cleanedText;
         
     } catch (error) {
         console.error("Hugging Face API Error:", error);
