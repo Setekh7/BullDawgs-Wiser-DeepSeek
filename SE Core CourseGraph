@@ -1,0 +1,59 @@
+// Graph with only core SE classes. No tech electives. Starting small, gonna add more assuming this method works
+
+class CourseGraph {
+    constructor() {
+        this.graph = {};      // Adjacency list representation of the graph
+        this.inDegree = {};   // Tracks number of prerequisites for each course
+    }
+
+    addCourse(course, prerequisites) {
+        if (!this.graph[course]) this.graph[course] = [];
+        if (!this.inDegree[course]) this.inDegree[course] = 0;
+
+        prerequisites.forEach(pre => {
+            if (!this.graph[pre]) this.graph[pre] = [];
+            this.graph[pre].push(course);
+            this.inDegree[course] = (this.inDegree[course] || 0) + 1;
+        });
+    }
+
+    getAvailableCourses(completedCourses) {
+        let queue = [...completedCourses];  // Start with completed courses
+        let available = new Set();
+
+        while (queue.length > 0) {
+            let course = queue.shift(); // Process one completed course at a time
+
+            if (this.graph[course]) {
+                this.graph[course].forEach(nextCourse => {
+                    this.inDegree[nextCourse] -= 1;
+                    if (this.inDegree[nextCourse] === 0) {
+                        available.add(nextCourse);
+                    }
+                });
+            }
+        }
+
+        return Array.from(available);
+    }
+}
+
+// Initialize graph
+const courseGraph = new CourseGraph();
+
+// Adding dark blue courses and their prerequisites
+courseGraph.addCourse("CSE 1384", ["CSE 1284"]);
+courseGraph.addCourse("CSE 2383", ["CSE 1384"]);
+courseGraph.addCourse("CSE 3183", ["CSE 2383"]);
+courseGraph.addCourse("CSE 3724", ["CSE 2383"]);
+courseGraph.addCourse("CSE 4733", ["CSE 3183", "CSE 3724"]);
+courseGraph.addCourse("CSE 4214", ["CSE 2383"]);
+courseGraph.addCourse("CSE 4223", ["CSE 4214"]);
+courseGraph.addCourse("CSE 4283", ["CSE 4214"]);
+courseGraph.addCourse("CSE 4833", ["CSE 2383"]);
+courseGraph.addCourse("CSE 3213", ["CSE 4214"]);
+courseGraph.addCourse("CSE 3223", ["CSE 3213"]);
+
+// Example usage
+const completed = ["CSE 1284", "CSE 1384", "CSE 2383"];
+console.log("Available Courses:", courseGraph.getAvailableCourses(completed));
