@@ -133,6 +133,37 @@ courseGraph.addCourse("CSE 4293", ["CSE 4633"];
 courseGraph.addCourse("CSE 4353", ["CSE 3724"];
 courseGraph.addCourse("CSE 4363", ["CSE 3183"];
 courseGraph.assignARate("CSE 4363", 51);
+courseGraph.addCourse("CSE 4383", ["CSE 4173");
+courseGraph.assignARate("CSE 4383", 77);
+courseGraph.addCourse("CSE 4413", ["CSE 2383");
+courseGraph.assignARate("CSE 4413", 41);
+courseGraph.addCourse("CSE 4423");
+courseGraph.addCourse("CSE 4433");
+courseGraph.assignARate("CSE 4433", 74);
+courseGraph.addCourse("CSE 4453", ["CSE 2213");
+courseGraph.assignARate("CSE 4453", 46);
+courseGraph.addCourse("CSE 4503", ["CSE 2383");
+courseGraph.assignARate("CSE 4503", 76);
+courseGraph.addCourse("CSE 4633", ["CSE 2383");
+courseGraph.assignARate("CSE 4633", 76);
+courseGraph.addCourse("CSE 4643", ["CSE 2383");
+courseGraph.assignARate("CSE 4643", 73);
+courseGraph.addCourse("CSE 4653", ["CSE 4633");
+courseGraph.assignARate("CSE 4653", 29);
+courseGraph.addCourse("CSE 4663"); //Requires junior standing
+courseGraph.assignARate("CSE 4663", 97);
+courseGraph.addCourse("CSE 4683", ["IE 4613"); //has other 1 off requirements, only 1 is needed
+courseGraph.addCourse("CSE 4693", ["IE 4613");
+courseGraph.assignARate("CSE 4693", 54);
+courseGraph.addCourse("CSE 4714", ["CSE 3723");
+courseGraph.assignARate("CSE 4714", 42);
+courseGraph.addCourse("CSE 4743", ["CSE 4733");
+courseGraph.addCourse("CSE 4773");
+courseGraph.assignARate("CSE 4773", 84);
+courseGraph.addCourse("CSE 4783", ["CSE 2383");
+courseGraph.assignARate("CSE 4783", 84);
+
+
 
 
 // Example usage
