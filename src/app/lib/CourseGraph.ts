@@ -30,6 +30,21 @@ export class CourseGraph {
         let queue = [...completedCourses];
         let available = new Set<string>();
 
+        // Track science courses
+        const firstLevelSciences = ["PH 1113", "CH 1213", "BIO 1134"];
+        const secondLevelSciences = ["PH 1123", "CH 1223", "BIO 1144"];
+
+        let firstLevelCompleted = firstLevelSciences.filter(course => completedCourses.includes(course)).length;
+        let secondLevelCompleted = secondLevelSciences.some(course => completedCourses.includes(course));
+
+        // Enforce the rule
+        if (firstLevelCompleted >= 2 && !secondLevelCompleted) {
+            // Force user to take a second-level science course before other courses
+            return secondLevelSciences
+                .filter(course => !completedCourses.includes(course)) // Only show ones they haven't taken
+                .map(course => ({ course, aRate: `${this.courseARate[course] || 0}%` }));
+    }
+        
         while (queue.length > 0) {
             let course = queue.shift()!;
             if (this.graph[course]) {
@@ -112,6 +127,8 @@ courseGraph.assignARate("CSE 4153", 61);
 courseGraph.addCourse("CSE 4163", ["CSE 3183"]);
 courseGraph.addCourse("CSE 4173", ["CSE 2383"]);
 courseGraph.assignARate("CSE 4173", 27);
+courseGraph.addCourse("CSE 4273"); //Requires senior standing, unsure how to implement
+courseGraph.assignARate("CSE 4273", 91);
 courseGraph.addCourse("CSE 4293", ["CSE 4633"];
 courseGraph.addCourse("CSE 4353", ["CSE 3724"];
 courseGraph.addCourse("CSE 4363", ["CSE 3183"];
