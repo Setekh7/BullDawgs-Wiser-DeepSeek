@@ -1,7 +1,29 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 
 const ChatMessage = ({ sender, text }) => {
+  const [displayedText, setDisplayedText] = useState("");
+  const typingSpeed = 15; // Adjust typing speed
+
+  useEffect(() => {
+    if (sender === "BullDawg-Wiser") {
+      setDisplayedText(""); // Reset for new messages
+      let i = 0;
+      const interval = setInterval(() => {
+        if (i < text.length) {
+          setDisplayedText((prev) => prev + text.charAt(i));
+          i++;
+        } else {
+          clearInterval(interval);
+        }
+      }, typingSpeed);
+
+      return () => clearInterval(interval);
+    } else {
+      setDisplayedText(text); // Instantly display user messages
+    }
+  }, [text, sender]);
+
   return (
     <div className={`flex gap-3 text-gray-600 text-sm ${sender === "BullDawg-Wiser" ? "justify-start" : "justify-end"}`}>
       {sender === "BullDawg-Wiser" ? (
@@ -19,7 +41,7 @@ const ChatMessage = ({ sender, text }) => {
       {/* Message Content */}
       <div className="flex-1 max-w-xs bg-gray-200 p-2 rounded-lg">
         <p className="font-bold">{sender}</p>
-        <ReactMarkdown className="mt-1 break-words">{text}</ReactMarkdown>
+        <ReactMarkdown className="mt-1 break-words">{displayedText}</ReactMarkdown>
       </div>
     </div>
   );
