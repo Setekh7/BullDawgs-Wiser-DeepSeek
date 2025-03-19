@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import ChatWindow from "./ChatWindow";
 import ChatInput from "./ChatInput";
+import DarkModeToggle from "./DarkModeToggle";
 
 const ChatPage = () => {
   const [messages, setMessages] = useState([
@@ -45,8 +46,11 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="h-screen w-screen flex justify-center items-center bg-gray-100">
-      <div className="w-full max-w-3xl h-[90vh] bg-white shadow-lg rounded-lg flex flex-col">
+    <div className="h-screen w-screen flex justify-center items-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+      <div className="absolute top-2 right-2">
+        <DarkModeToggle />
+      </div>
+      <div className="w-full max-w-3xl h-[90vh] bg-gray-100 dark:bg-gray-900 shadow-lg rounded-lg flex flex-col overflow-hidden">
         <ChatWindow messages={messages} isLoading={isLoading} />
         <ChatInput onSendMessage={handleSendMessage} />
       </div>

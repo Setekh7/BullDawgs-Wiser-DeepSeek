@@ -5,23 +5,41 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --accent: #3b82f6;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --accent: #2563eb;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Utility classes for background and text colors */
+  .bg-primary {
+    background-color: var(--background);
+  }
+
+  .text-primary {
+    color: var(--foreground);
+  }
+
+  .bg-accent {
+    background-color: var(--accent);
+  }
+
+  .text-accent {
+    color: var(--accent);
   }
 }
