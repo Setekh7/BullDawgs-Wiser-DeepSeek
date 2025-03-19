@@ -23,13 +23,13 @@ const ChatInput = ({ onSendMessage }) => {
   };
 
   return (
-    <form className="flex items-center w-full p-4 bg-gray-100 border-t" onSubmit={handleSubmit}>
+    <form className="flex items-center w-full p-4 bg-gray-100 dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700" onSubmit={handleSubmit}>
       <input type="file" ref={inputRef} hidden accept=".pdf" onChange={handleFileChange} />
 
       {/* File Attach Icon */}
       <button
         type="button"
-        className="text-gray-500 hover:text-gray-700 p-2"
+        className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 p-2"
         onClick={() => inputRef.current?.click()}
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="20" height="20" fill="currentColor">
@@ -38,22 +38,25 @@ const ChatInput = ({ onSendMessage }) => {
       </button>
 
       {selectedFile && (
-        <div className="text-sm bg-gray-200 px-2 py-1 rounded-md flex items-center">
+        <div className="text-sm bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-md flex items-center">
           {selectedFile.name}{" "}
-          <button onClick={handleFileRemove} className="ml-2 text-gray-500 hover:text-gray-700">
+          <button onClick={handleFileRemove} className="ml-2 text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100">
             &#x2715;
           </button>
         </div>
       )}
 
       <input
-        className="flex-1 p-2 rounded-md border border-gray-300"
+        className="flex-1 p-2 mx-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-300"
         placeholder="Type your message..."
         value={inputText}
         onChange={(e) => setInputText(e.target.value)}
       />
 
-      <button type="submit" className="ml-2 px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800">
+      <button
+        type="submit"
+        className="ml-2 px-4 py-2 bg-black dark:bg-gray-700 text-white dark:text-gray-100 rounded-md hover:bg-gray-800 dark:hover:bg-gray-600"
+      >
         Send
       </button>
     </form>
