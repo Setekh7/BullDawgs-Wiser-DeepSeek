@@ -89,12 +89,12 @@ courseGraph.addCourse("CSE 4833", ["CSE 2383", "CSE 2813"]); // Intro to Algorit
 
 // Semester 7
 courseGraph.addCourse("CSE 4233", ["CSE 4214"]); // Software Arch & Design
-courseGraph.addCourse("CSE 3213", ["CSE 4214"], 7); // SE Senior Project 1
-courseGraph.addCourse("CSE 4223", ["CSE 4214"], 7); // Manage SW Project
+courseGraph.addCourse("CSE 3213", ["CSE 4214"], 3); // SE Senior Project 1
+courseGraph.addCourse("CSE 4223", ["CSE 4214"], 3); // Manage SW Project
 
 // Semester 8
-courseGraph.addCourse("CSE 3763", [], 7); // Legal and Ethical Issues
-courseGraph.addCourse("CSE 3223", ["CSE 4214"], 7); // SE Senior Project 2
+courseGraph.addCourse("CSE 3763", [], 3); // Legal and Ethical Issues
+courseGraph.addCourse("CSE 3223", ["CSE 4214"], 3); // SE Senior Project 2
 
 //Required Sciences
 // Level 1 Science Courses
