@@ -1,12 +1,14 @@
 export class CourseGraph {
     private graph: { [key: string]: string[] } = {};
     private inDegree: { [key: string]: number } = {};
+    private yearRequirement: { [key: string]: number | null } = {};
 
     constructor() {}
 
-    addCourse(course: string, prerequisites: string[]): void {
+    addCourse(course: string, prerequisites: string[], yearReq: number | null = null): void {
         if (!this.graph[course]) this.graph[course] = [];
         if (!this.inDegree[course]) this.inDegree[course] = 0;
+        this.yearRequirement[course] = yearReq;
 
         prerequisites.forEach(pre => {
             if (!this.graph[pre]) this.graph[pre] = [];
@@ -15,15 +17,13 @@ export class CourseGraph {
         });
     }
 
-    getAvailableCourses(completedCourses: string[]): string[] {
+    getAvailableCourses(completedCourses: string[], currentYear: number): string[] {
         const localInDegree = { ...this.inDegree };
         let queue = [...completedCourses];
         let available = new Map<string, number>();
-    
         // Cache to store total dependency counts to avoid recomputing
         let dependencyCountCache: { [key: string]: number } = {};
-    
-        // Helper function: Recursively count total downstream dependencies
+         // Helper function: Recursively count total downstream dependencies
         const countDependencies = (course: string): number => {
             if (dependencyCountCache[course] !== undefined) {
                 return dependencyCountCache[course];
@@ -39,27 +39,24 @@ export class CourseGraph {
             dependencyCountCache[course] = count;
             return count;
         };
-    
         // Process available courses
         while (queue.length > 0) {
             let course = queue.shift()!;
             if (this.graph[course]) {
                 this.graph[course].forEach(nextCourse => {
                     localInDegree[nextCourse] -= 1;
-                    if (localInDegree[nextCourse] === 0) {
-                        let priority = countDependencies(nextCourse); // Compute full impact
+                    if (localInDegree[nextCourse] === 0 && (this.yearRequirement[nextCourse] === null || this.yearRequirement[nextCourse] <= currentYear)) {
+                        let priority = countDependencies(nextCourse);
                         available.set(nextCourse, priority);
                     }
                 });
             }
         }
-    
         // Sort available courses by their total impact (higher = more important)
         return Array.from(available.entries())
-            .sort((a, b) => b[1] - a[1]) // Sort in descending order of impact
+            .sort((a, b) => b[1] - a[1])
             .map(([course]) => course);
     }
-    
 }
 
 // Create a default instance if needed
@@ -92,12 +89,12 @@ courseGraph.addCourse("CSE 4833", ["CSE 2383", "CSE 2813"]); // Intro to Algorit
 
 // Semester 7
 courseGraph.addCourse("CSE 4233", ["CSE 4214"]); // Software Arch & Design
-courseGraph.addCourse("CSE 3213", ["CSE 4214"]); // SE Senior Project 1
-courseGraph.addCourse("CSE 4223", ["CSE 4214"]); // Manage SW Project
+courseGraph.addCourse("CSE 3213", ["CSE 4214"], 7); // SE Senior Project 1
+courseGraph.addCourse("CSE 4223", ["CSE 4214"], 7); // Manage SW Project
 
 // Semester 8
-courseGraph.addCourse("CSE 3763", []); // Legal and Ethical Issues
-courseGraph.addCourse("CSE 3223", ["CSE 4214"]); // SE Senior Project 2
+courseGraph.addCourse("CSE 3763", [], 7); // Legal and Ethical Issues
+courseGraph.addCourse("CSE 3223", ["CSE 4214"], 7); // SE Senior Project 2
 
 //Required Sciences
 // Level 1 Science Courses
@@ -115,3 +112,5 @@ courseGraph.addCourse("BIO 1144", ["BIO 1134"]); // Requires 1134
 //const completed = ["CSE 1284", "CSE 1384", "CSE 2383"];
 //console.log("Available Courses:", courseGraph.getAvailableCourses(completed));
 // Tech electives
+
+
