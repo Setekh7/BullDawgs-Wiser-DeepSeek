@@ -11,10 +11,13 @@ const ChatPage = () => {
   ]);
   const [isLoading, setIsLoading] = useState(false);
 
+
   const handleSendMessage = async (inputText, selectedFile) => {
     if (!inputText.trim() && !selectedFile) return;
 
-    const newMessages = [...messages, { sender: "User", text: inputText }];
+    const displayText = inputText.trim() || (selectedFile ? "Uploaded a file" : "");
+
+    const newMessages = [...messages, { sender: "User", text: displayText }];
     setMessages(newMessages);
     setIsLoading(true);
 
@@ -22,10 +25,13 @@ const ChatPage = () => {
       let response;
       if (selectedFile) {
         const formData = new FormData();
-        formData.append("message", inputText);
+        formData.append("message", inputText || "");
         formData.append("file", selectedFile);
 
-        response = await fetch("/api/openai", { method: "POST", body: formData });
+        response = await fetch("/api/openai", { 
+          method: "POST", 
+          body: formData 
+        });
       } else {
         response = await fetch("/api/openai", {
           method: "POST",
@@ -36,10 +42,16 @@ const ChatPage = () => {
 
       if (!response.ok) throw new Error("Failed to get response");
       const data = await response.json();
-      setMessages((prev) => [...prev, { sender: "BullDawg-Wiser", text: data.answer }]);
+      setMessages((prev) => [...prev, { 
+        sender: "BullDawg-Wiser", 
+        text: data.answer 
+      }]);
     } catch (error) {
       console.error("Error:", error);
-      setMessages((prev) => [...prev, { sender: "BullDawg-Wiser", text: "Sorry, I encountered an error processing your request." }]);
+      setMessages((prev) => [...prev, { 
+        sender: "BullDawg-Wiser", 
+        text: "Sorry, I encountered an error processing your request." 
+      }]);
     } finally {
       setIsLoading(false);
     }
