@@ -14,10 +14,13 @@ export async function askQuestion(message: string, file: File | null = null): Pr
 
         // Get advisory context from the course graph
         const completedCourses = ["CSE 1284", "CSE 1011"]; // Example completed courses
-        const availableCourses = courseGraph.getAvailableCourses(completedCourses);
+        const currentYear = 1;
+        const availableCourses = courseGraph.getAvailableCourses(completedCourses, currentYear);
 
         // Create a summary of available courses
-        const courseSummary = availableCourses.length > 0 ? `The following courses are available:\n• ${availableCourses.join("\n• ")}` : "There are no available courses for the user.";
+        const courseSummary = availableCourses.length > 0 
+    ? `The following courses are available:\n• ${availableCourses.map(c => `${c.course} (A Rate: ${c.aRate})`).join("\n• ")}`
+    : "There are no available courses for the user.";
         //console.log(availableCourses.length > 0 ? `The following courses are available:\n• ${availableCourses.join("\n• ")}` : "There are no available courses.");
         
         // Delimiter
@@ -59,4 +62,3 @@ export async function askQuestion(message: string, file: File | null = null): Pr
         console.error("Hugging Face API Error:", error);
         throw error;
     }
-}
