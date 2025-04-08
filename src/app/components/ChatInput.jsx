@@ -68,7 +68,9 @@ const ChatInput = ({ onSendMessage }) => {
         type="submit"
         className="ml-2 px-4 py-2 bg-black dark:bg-gray-700 text-white dark:text-gray-100 rounded-md hover:bg-gray-800 dark:hover:bg-gray-600"
       >
-        Send
+        <svg stroke="none" fill="currentColor" strokeWidth="0" viewBox="3 0 22 22" height="26" width="26" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 2L2 8.66667L11.5833 12.4167M22 2L15.3333 22L11.5833 12.4167M22 2L11.5833 12.4167" />
+          </svg>
       </button>
     </form>
   );

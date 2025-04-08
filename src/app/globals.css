@@ -6,6 +6,7 @@
   --background: #ffffff;
   --foreground: #171717;
   --accent: #3b82f6;
+  transition: all 0.3s ease;
 }
 
 .dark {
@@ -19,6 +20,12 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+* { 
+  transition-property: var(--background), var(--accent), color, fill, stroke;
+  transition-duration: 0.35s;
+  transition-timing-function: ease;
 }
 
 @layer utilities {
@@ -41,5 +48,18 @@ body {
 
   .text-accent {
     color: var(--accent);
+  }
+
+  /* .typing-cursor {
+    display: inline-block;
+    width: 0.4em;
+    height: 1em;
+    background-color: currentColor;
+    margin-left: 2px;
+    animation: blink 1s step-end infinite;
+  } */
+  @keyframes blink {
+    0%, 100% { opacity: 1;}
+    50% {opacity: 0; }
   }
 }
