@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 
-const ChatInput = ({ onSendMessage }) => {
+const ChatInput = ({ onSendMessage, onCreateNewFile }) => {
   const [inputText, setInputText] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const inputRef = useRef(null);
@@ -35,7 +35,7 @@ const ChatInput = ({ onSendMessage }) => {
     <form className="flex items-center w-full p-4 bg-gray-100 dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700" 
     onSubmit={handleSubmit}>
       <input type="file" ref={fileInputRef} hidden accept=".txt" onChange={handleFileChange} />
-
+      
       {/* File Attach Icon */}
       <button
         type="button"
@@ -46,6 +46,21 @@ const ChatInput = ({ onSendMessage }) => {
           <path d="M364.2 83.8c-24.4-24.4-64-24.4-88.4 0l-184 184c-42.1 42.1-42.1 110.3 0 152.4s110.3 42.1 152.4 0l152-152c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-152 152c-64 64-167.6 64-231.6 0s-64-167.6 0-231.6l184-184c46.3-46.3 121.3-46.3 167.6 0s46.3 121.3 0 167.6l-176 176c-28.6 28.6-75 28.6-103.6 0s-28.6-75 0-103.6l144-144c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-144 144c-6.7 6.7-6.7 17.7 0 24.4s17.7 6.7 24.4 0l176-176c24.4-24.4 24.4-64 0-88.4z"/>
         </svg>
       </button>
+
+      {/* Create New File Button */}
+      <button
+          type="button"
+          className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 p-2"
+          onClick={onCreateNewFile}
+          title="Create new file"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="12" y1="18" x2="12" y2="12"></line>
+            <line x1="9" y1="15" x2="15" y2="15"></line>
+          </svg>
+        </button>
 
       {selectedFile && (
         <div className="text-sm bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-md flex items-center">

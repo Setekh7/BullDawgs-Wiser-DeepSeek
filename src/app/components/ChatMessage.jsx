@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 
-const ChatMessage = ({ sender, text }) => {
+const ChatMessage = ({ sender, text, fileRef, action, onViewFile }) => {
   const [displayedText, setDisplayedText] = useState("");
   const typingSpeed = 15; // Adjust typing speed
   const characterIndexRef = useRef(0);
@@ -29,6 +29,24 @@ const ChatMessage = ({ sender, text }) => {
     }
   }, [text, sender]);
 
+  // Render message content with clickable filename if its an uploaded file
+  const renderMessageContent = () => {
+    if (sender === "User" && text.startsWith("Uploaded ") && fileRef) {
+      const fileName = fileRef.name;
+      return (
+        <>
+          Uploaded <span 
+            className="text-blue-400 hover:text-blue-500 underline cursor-pointer"
+            onClick={() => onViewFile(fileRef)}
+          >
+            {fileName}
+          </span>
+        </>
+      );
+    } else {
+      return <ReactMarkdown className="break-words">{displayedText}</ReactMarkdown>;
+    }
+  };
   return (
     <div className={`flex gap-3 text-gray-600 text-sm ${sender === "BullDawg-Wiser" ? "justify-start" : "justify-end"}`}>
       {sender === "BullDawg-Wiser" ? (
@@ -46,7 +64,29 @@ const ChatMessage = ({ sender, text }) => {
       {/* Message Content */}
       <div className="flex-1 max-w-xs bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 p-2 rounded-lg">
         <p className="font-bold">{sender}</p>
-        <ReactMarkdown className="mt-1 break-words">{displayedText}</ReactMarkdown>
+        <div className="mt-1">
+          {renderMessageContent()}
+        </div>
+        {/* File Handling: Add view file button if message has file reference */}
+        {action === "viewFile" && fileRef && (
+          <button 
+            onClick={() => onViewFile(fileRef)}
+            className="mt-2 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+          >
+            View File
+          </button>
+        )}
+
+        {/* Make file names clickable in user messages */}
+        {sender === "User" && text.startsWith("Uploaded") && fileRef && (
+          <div className="mt-1">
+            <button
+              onClick={() => onViewFile(fileRef)}
+              className="text-blue-400 hover:text-blue-500 underline text-sm"
+            >
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
