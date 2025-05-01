@@ -79,13 +79,14 @@ IMPORTANT RULES:
             }
         }
         // Get advisory context from the course graph
-        //const completedCourses = ["CSE 1284", "CSE 1011"]; // Example completed courses
-        console.log("Completed courses returned:", completedCourses);
-        const availableCourses = courseGraph.getAvailableCourses(completedCourses);
-        console.log("Available courses returned:", availableCourses);
+        const completedCourses = ["CSE 1284", "CSE 1011"]; // Example completed courses
+        const currentYear = 1;
+        const availableCourses = courseGraph.getAvailableCourses(completedCourses, currentYear);
 
         // Create a summary of available courses
-        const courseSummary = availableCourses.length > 0 ? `The following courses are available:\n• ${availableCourses.join("\n• ")}` : "There are no available courses for the user.";
+        const courseSummary = availableCourses.length > 0 
+    ? `The following courses are available:\n• ${availableCourses.map(c => `${c.course} (A Rate: ${c.aRate})`).join("\n• ")}`
+    : "There are no available courses for the user.";
         //console.log(availableCourses.length > 0 ? `The following courses are available:\n• ${availableCourses.join("\n• ")}` : "There are no available courses.");
         
         // Delimiter
@@ -128,4 +129,3 @@ IMPORTANT RULES:
         console.error("Hugging Face API Error:", error);
         throw error;
     }
-}
