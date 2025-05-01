@@ -129,3 +129,4 @@ IMPORTANT RULES:
         console.error("Hugging Face API Error:", error);
         throw error;
     }
+}
