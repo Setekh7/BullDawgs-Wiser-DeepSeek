@@ -33,21 +33,21 @@ export class CourseGraph {
         let available = new Map<string, number>();
         let dependencyCountCache: { [key: string]: number } = {};
 
-        // 🔹 Define first & second-level science courses
+        //  Define first & second-level science courses
         const firstLevelSciences = ["PH 1113", "CH 1213", "BIO 1134"];
         const secondLevelSciences = ["PH 1123", "CH 1223", "BIO 1144"];
 
         let firstLevelCompleted = firstLevelSciences.filter(course => completedCourses.includes(course)).length;
         let secondLevelCompleted = secondLevelSciences.some(course => completedCourses.includes(course));
 
-        // 🔹 If 2 Level 1 sciences are done, enforce Level 2 selection first
+        // If 2 Level 1 sciences are done, enforce Level 2 selection first
         if (firstLevelCompleted >= 2 && !secondLevelCompleted) {
             return secondLevelSciences
                 .filter(course => !completedCourses.includes(course))
                 .map(course => ({ course, aRate: `${this.courseARate[course] || 0}%` }));
         }
 
-        // 🔹 Helper function to count total dependencies
+        // Helper function to count total dependencies
         const countDependencies = (course: string): number => {
             if (dependencyCountCache[course] !== undefined) {
                 return dependencyCountCache[course];
@@ -62,7 +62,7 @@ export class CourseGraph {
             return count;
         };
 
-        // 🔹 Add all courses with no prerequisites & available Level 1 sciences
+        // Add all courses with no prerequisites & available Level 1 sciences
         for (const course in this.inDegree) {
             if (this.inDegree[course] === 0 && !completedCourses.includes(course)) {
                 if (this.yearRequirement[course] === null || this.yearRequirement[course] <= currentYear) {
@@ -71,7 +71,7 @@ export class CourseGraph {
             }
         }
 
-        // 🔹 Process remaining available courses
+        // Process remaining available courses
         while (queue.length > 0) {
             let course = queue.shift()!;
             if (this.graph[course]) {
@@ -84,7 +84,7 @@ export class CourseGraph {
             }
         }
 
-        // 🔹 Return sorted available courses with A rates
+        // Return sorted available courses with A rates
         return Array.from(available.entries())
             .sort((a, b) => b[1] - a[1]) // Sort by impact (higher = more important)
             .map(([course]) => ({
