@@ -11,9 +11,10 @@ const ChatWindow = ({ messages, isLoading, onViewFile }) => {
 
   return (
     <div className="flex-1 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-800 rounded-t-lg">
-      {messages.map((msg, index) => (
+      {messages.map(msg => (
         <ChatMessage 
-          key={index} 
+          key={msg.id} 
+          id={msg.id}
           sender={msg.sender} 
           text={msg.text}
           fileRef={msg.fileRef}

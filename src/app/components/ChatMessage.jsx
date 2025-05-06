@@ -1,33 +1,46 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 
-const ChatMessage = ({ sender, text, fileRef, action, onViewFile }) => {
+// Module-level cache to remember which messages have already animated
+const typedCache = new Set();
+
+const ChatMessage = ({ id, sender, text, fileRef, action, onViewFile }) => {
   const [displayedText, setDisplayedText] = useState("");
   const typingSpeed = 15; // Adjust typing speed
   const characterIndexRef = useRef(0);
 
+  const hasAnimated = useRef(false);
+
   useEffect(() => {
-    if (sender === "BullDawg-Wiser") {
-      // Reset for new messages
-      setDisplayedText(""); 
-      characterIndexRef.current = 0;
-
-      // Updated typing effect
-      const typingInterval = setInterval(() => {
-        if (characterIndexRef.current < text.length) {
-          // Use a function that creates a new string directly from source text
-          setDisplayedText(text.substring(0, characterIndexRef.current + 1));
-          characterIndexRef.current++;
-        } else {
-          clearInterval(typingInterval);
-        }
-      }, typingSpeed);
-
-      return () => clearInterval(typingInterval);
-    } else {
-      setDisplayedText(text); // Instantly display user messages
+    // User messages: always show instantly
+    if (sender !== "BullDawg-Wiser") {
+      setDisplayedText(text);
+      return;
     }
-  }, [text, sender]);
+
+    // Bot message but we’ve already animated once = show full text immediately
+    if (typedCache.has(id) || hasAnimated.current) {
+      setDisplayedText(text);
+      return;
+    }
+
+    // First time displaying this bot message = run the type‑writer effect
+    setDisplayedText("");
+    characterIndexRef.current = 0;
+
+    const typingInterval = setInterval(() => {
+      if (characterIndexRef.current < text.length) {
+        setDisplayedText(text.substring(0, characterIndexRef.current + 1));
+        characterIndexRef.current++;
+      } else {
+        clearInterval(typingInterval);
+        hasAnimated.current = true;        // lock it so it won’t run again
+        typedCache.add(id);
+      }
+    }, typingSpeed);
+
+    return () => clearInterval(typingInterval);
+  }, [id, text, sender]);
 
   // Render message content with clickable filename if its an uploaded file
   const renderMessageContent = () => {

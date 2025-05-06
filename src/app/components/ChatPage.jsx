@@ -5,10 +5,11 @@ import ChatWindow from "./ChatWindow";
 import ChatInput from "./ChatInput";
 import DarkModeToggle from "./DarkModeToggle";
 import FileViewer from "./FileViewer";
+import { v4 as uuid } from "uuid"; 
 
 const ChatPage = () => {
   const [messages, setMessages] = useState([
-    { sender: "BullDawg-Wiser", text: "Hi! I am BullDawg-Wiser, your AI-driven academic advisor. Please ask me a question to get started." },
+    { id: uuid(), sender: "BullDawg-Wiser", text: "Hi! I am BullDawg-Wiser, your AI‑driven academic advisor. Please ask me a question to get started." },
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [fileViewerOpen, setFileViewerOpen] = useState(false);
@@ -69,12 +70,15 @@ const ChatPage = () => {
       displayText = "Uploaded file";
     }
 
-    const newMessages = [...messages, {
-       sender: "User", 
-       text: displayText, 
-       fileRef: selectedFile
-      }];
-    setMessages(newMessages);
+    setMessages(prev => [
+      ...prev,
+      {
+        id: uuid(),               // permanent id
+        sender: "User",
+        text: displayText,
+        fileRef: selectedFile,
+      },
+    ]);
     setIsLoading(true);
 
     try {
@@ -99,12 +103,14 @@ const ChatPage = () => {
       if (!response.ok) throw new Error("Failed to get response");
       const data = await response.json();
       setMessages((prev) => [...prev, { 
+        id: uuid(),
         sender: "BullDawg-Wiser", 
         text: data.answer 
       }]);
     } catch (error) {
       console.error("Error:", error);
       setMessages((prev) => [...prev, { 
+        id: uuid(),
         sender: "BullDawg-Wiser", 
         text: "Sorry, I encountered an error processing your request." 
       }]);

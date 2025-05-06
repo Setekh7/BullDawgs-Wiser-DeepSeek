@@ -79,7 +79,7 @@ IMPORTANT RULES:
             }
         }
         // Get advisory context from the course graph
-        const completedCourses = ["CSE 1284", "CSE 1011"]; // Example completed courses
+        completedCourses = ["CSE 1284", "CSE 1011"]; // Example completed courses
         const currentYear = 1;
         const availableCourses = courseGraph.getAvailableCourses(completedCourses, currentYear);
 
