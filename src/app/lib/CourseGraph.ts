@@ -180,7 +180,7 @@ courseGraph.assignARate("CSE 4153", 61);
 courseGraph.addCourse("CSE 4163", ["CSE 3183"]);
 courseGraph.addCourse("CSE 4173", ["CSE 2383"]);
 courseGraph.assignARate("CSE 4173", 27);
-courseGraph.addCourse("CSE 4273", [], 4); //Requires senior standing, unsure how to implement
+courseGraph.addCourse("CSE 4273", [], 4); 
 courseGraph.assignARate("CSE 4273", 91);
 courseGraph.addCourse("CSE 4293", ["CSE 4633"]);
 courseGraph.addCourse("CSE 4353", ["CSE 3724"]);
@@ -203,7 +203,7 @@ courseGraph.addCourse("CSE 4643", ["CSE 2383"]);
 courseGraph.assignARate("CSE 4643", 73);
 courseGraph.addCourse("CSE 4653", ["CSE 4633"]);
 courseGraph.assignARate("CSE 4653", 29);
-courseGraph.addCourse("CSE 4663", [], 3); //Requires junior standing
+courseGraph.addCourse("CSE 4663", [], 3); 
 courseGraph.assignARate("CSE 4663", 97);
 courseGraph.addCourse("CSE 4683", ["IE 4613"]); //has other 1 off requirements, only 1 is needed
 courseGraph.addCourse("CSE 4693", ["IE 4613"]);
