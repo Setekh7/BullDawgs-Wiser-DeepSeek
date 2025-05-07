@@ -1,16 +1,16 @@
 // src/app/lib/openai.ts
-// import { writeFileSync } from 'fs';
-// import path from 'path';
-// import { VectorStores } from 'openai/resources/beta/index.mjs';
-import { HfInference } from "@huggingface/inference";
+import OpenAI from "openai";
 import { courseGraph } from "@/app/lib/CourseGraph";
 
-const client = new HfInference(process.env.HUGGINGFACE_API_KEY! || '');
+// Initialize OpenAI client
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY!,
+});
+
 
 async function readTextFile(file: File): Promise<string[]> {
     // check if browser environment
     if (typeof window === "undefined") {
-        console.error("Server environment detected, using server-side file handling.");
         return handleServerFile(file);
     }
 
@@ -37,8 +37,6 @@ async function readTextFile(file: File): Promise<string[]> {
 // Server-side alternative for file processing
 async function handleServerFile(file: File): Promise<string[]> {
     try {
-        // On the server, the File object comes as a blob-like object
-        // We need to read it differently
         const buffer = await file.arrayBuffer();
         const text = new TextDecoder().decode(buffer);
         
@@ -51,82 +49,56 @@ async function handleServerFile(file: File): Promise<string[]> {
         return [];
     }
 }
-export async function askQuestion(message: string, file: File | null = null): Promise<string> {
+export async function askQuestion(userMessage: string, file: File | null = null): Promise<string> {
     try {
-        // instruction
-        //const systemPrompt = "You are an academic advisor who recommends courses for software engineering students based on the context provided. Use this information and only this information to provide concise, clear responses to students' questions and requests. Only respond with what is necessary to fulfill the user's request, such as the class numbers of the classes they should take. DO NOT add your thoughts, reasoning, or unnecessary text in your response. Your job is to provide the students with the classes they will take next, which are provided to you.";
-        const systemPrompt = `You are an AI academic advisor that ONLY outputs course codes.
+        const systemMessage = `
+            You are an AI academic advisor. Your job is to recommend what courses the user should take next based on the courses they've already completed and what is available to them.
 
-OUTPUT FORMAT:
-• CSE 1234
-• CSE 5678
+            If no courses are available, respond with "No available courses".`;
+            // `
+            // You are an AI academic advisor. Your job is to recommend what courses the user should take next based on the courses they've already completed and what is available to them.
 
-IMPORTANT RULES:
-- NEVER explain your reasoning
-- NEVER add introductory text
-- NEVER add concluding text
-- ONLY respond with bullet points of course codes
-- If no courses are available, respond with "No available courses"`;
+            // You must include a list of bullet-pointed course codes (like: • CSE 2213) in your response.
+
+            // If no courses are available, respond with "No available courses".
+
+            // DO NOT explain your reasoning, add greetings, or include additional information.`;
         let completedCourses: string[] = [];
-
         // Read the file and extract course codes
         if (file) {
-            try {
-                completedCourses = await readTextFile(file);
-            } catch (fileError) {
-                console.error("Error reading file:", fileError);
-                //return "Error reading file.";
-            }
+            completedCourses = await readTextFile(file);
         }
         // Get advisory context from the course graph
-        completedCourses = ["CSE 1284", "CSE 1011"]; // Example completed courses
         const currentYear = 1;
         const availableCourses = courseGraph.getAvailableCourses(completedCourses, currentYear);
+        const availableCourseCodes = availableCourses.map(c => c.course);
+        const availableSummary = availableCourseCodes.length
+          ? `• ${availableCourseCodes.join("\n• ")}`
+          : "No available courses";
 
-        // Create a summary of available courses
-        const courseSummary = availableCourses.length > 0 
-    ? `The following courses are available:\n• ${availableCourses.map(c => `${c.course} (A Rate: ${c.aRate})`).join("\n• ")}`
-    : "There are no available courses for the user.";
-        //console.log(availableCourses.length > 0 ? `The following courses are available:\n• ${availableCourses.join("\n• ")}` : "There are no available courses.");
-        
-        // Delimiter
-        let prompt = `${systemPrompt}\n\nContext: ${courseSummary}\n\nUser: ${message}\n\n`;
-        if (file) {
-            prompt += "User attached file contains additional context.\n";
-            /* <-- Process file contents here --> */ 
-            prompt += "Classes passed:";
-            // using completedCourses
-            prompt += `\n• ${completedCourses.join("\n• ")}`;
-            //prompt += `\n\n${fileText}`;
+        const userText = userMessage?.trim() || "What courses should I take next?";
+
+        const contextMsg = `The user has completed the following courses:\n• ${completedCourses.join("\n• ")}\n\nBased on the curriculum, the available next courses are:\n${availableSummary}`;
+
+        const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
+            { role: "system", content: systemMessage.trim() },
+            { role: "user", content: `${contextMsg}\n\nUser question: ${userText}` }
+          ];
+      
+          const response = await openai.chat.completions.create({
+            model: "gpt-4-1106-preview",
+            messages,
+            temperature: 0.3,
+            top_p: 0.8,
+            max_tokens: 200,
+          });
+      
+          const output = response.choices[0]?.message?.content?.trim() || "No response received.";
+          console.log("Response:", output);
+          return output;
+      
+        } catch (err) {
+          console.error("Error in askQuestion:", err);
+          return "An error occurred while processing your request.";
         }
-        prompt += "\n\nResponse:\n";
-        console.log(prompt);
-
-        const output = await client.textGeneration({
-            model: "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
-            inputs: prompt,
-            provider: "hf-inference",
-            parameters: {
-              temperature: 0.01,
-              max_length: 50,
-              repetition_penalty: 1.2,
-              return_full_text: false,
-              top_p: 0.1,
-            },
-        });
-        
-        const cleanedText = output.generated_text
-        ? output.generated_text.replace(/<\/think>/g, '')
-                              .replace(/<think>/g, '')
-                              .replace(/\[.*?\]/g, '') // Optional: removes content in square brackets
-                              .trim()
-            : "No response received.";
-
-        console.log(cleanedText); 
-        return cleanedText;
-        
-    } catch (error) {
-        console.error("Hugging Face API Error:", error);
-        throw error;
-    }
 }
