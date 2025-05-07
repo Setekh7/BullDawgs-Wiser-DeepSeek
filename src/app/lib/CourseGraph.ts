@@ -40,11 +40,14 @@ export class CourseGraph {
         let firstLevelCompleted = firstLevelSciences.filter(course => completedCourses.includes(course)).length;
         let secondLevelCompleted = secondLevelSciences.some(course => completedCourses.includes(course));
 
-        // If 2 Level 1 sciences are done, enforce Level 2 selection first
+        // Check if first-level sciences are completed
         if (firstLevelCompleted >= 2 && !secondLevelCompleted) {
-            return secondLevelSciences
+            secondLevelSciences
                 .filter(course => !completedCourses.includes(course))
-                .map(course => ({ course, aRate: `${this.courseARate[course] || 0}%` }));
+                .forEach(course => {
+                    // Set a very high priority to ensure these appear first
+                    available.set(course, 1000 + (dependencyCountCache[course] || 0));
+                });
         }
 
         // Helper function to count total dependencies
