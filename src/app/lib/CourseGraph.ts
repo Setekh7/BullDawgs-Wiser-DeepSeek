@@ -176,45 +176,57 @@ courseGraph.assignARate("EN 1103", 35);
 courseGraph.assignARate("EN 1113", 44);
 
 //Tech Electives
-courseGraph.addCourse("CSE 3713", ["CSE 1284"]);
+courseGraph.addCourse("CSE 3324", ["CSE 2383", "CSE 4503"]); //Dist Client/Server Prog
+courseGraph.assignARate("CSE 3324", 57);
+courseGraph.addCourse("CSE 3683", ["CSE 1384"]); //AI Fundamentals
+courseGraph.addCourse("CSE 3713", ["CSE 1284"]); //Introduction to Cybersecurity
 courseGraph.assignARate("CSE 3713", 80);
-courseGraph.addCourse("CSE 4153", ["CSE 3724"]);
+courseGraph.addCourse("CSE 3813", ["CSE 2383", "CSE 2813"]);  //Intro to Formal Lang
+courseGraph.assignARate("CSE 3813", 28);
+courseGraph.addCourse("CSE 4153", ["CSE 3724"]); //Data Comm Networks
 courseGraph.assignARate("CSE 4153", 61);
-courseGraph.addCourse("CSE 4163", ["CSE 3183"]);
-courseGraph.addCourse("CSE 4173", ["CSE 2383"]);
+courseGraph.addCourse("CSE 4163", ["CSE 3183"]); //Des Parallel Alg
+courseGraph.addCourse("CSE 4173", ["CSE 2383"]); //Cryptography
 courseGraph.assignARate("CSE 4173", 27);
-courseGraph.addCourse("CSE 4273", [], 4); 
+courseGraph.addCourse("CSE 4243", ["CSE 3183"]); //Info and Computer Sec
+courseGraph.assignARate("CSE 4243", 93);
+courseGraph.addCourse("CSE 4253", ["CSE 2383", "CSE 2213"]); //Secure Software Engineering
+courseGraph.assignARate("CSE 4253", 54);
+courseGraph.addCourse("CSE 4273", [], 4); //Intro to Computer Forensics
 courseGraph.assignARate("CSE 4273", 91);
-courseGraph.addCourse("CSE 4293", ["CSE 4633"]);
-courseGraph.addCourse("CSE 4353", ["CSE 3724"]);
-courseGraph.addCourse("CSE 4363", ["CSE 3183"]);
+courseGraph.addCourse("CSE 4293", ["CSE 4633"]); //AI for Cybersecurity
+courseGraph.addCourse("CSE 4353", ["CSE 3724"]); //Literate Programming
+courseGraph.addCourse("CSE 4363", ["CSE 3183"]); //Software Reverse Engineering
 courseGraph.assignARate("CSE 4363", 51);
-courseGraph.addCourse("CSE 4383", ["CSE 4173"]);
+courseGraph.addCourse("CSE 4383", ["CSE 4173"]); //Network Security
 courseGraph.assignARate("CSE 4383", 77);
-courseGraph.addCourse("CSE 4413", ["CSE 2383"]);
+courseGraph.addCourse("CSE 4413", ["CSE 2383"]); //Computer Graphics
 courseGraph.assignARate("CSE 4413", 41);
-courseGraph.addCourse("CSE 4423", []);
-courseGraph.addCourse("CSE 4433", []);
+courseGraph.addCourse("CSE 4423", []); //Data Visualization
+couseGraph.assignARate("CSE 4423", 65);
+courseGraph.addCourse("CSE 4433", []); //VXR Dev
 courseGraph.assignARate("CSE 4433", 74);
-courseGraph.addCourse("CSE 4453", ["CSE 2213"], 3);
+courseGraph.addCourse("CSE 4453", ["CSE 2213"], 3); //Game Design
 courseGraph.assignARate("CSE 4453", 46);
-courseGraph.addCourse("CSE 4503", ["CSE 2383"]);
+courseGraph.addCourse("CSE 4503", ["CSE 2383", "CSE 2813"]); //Database Management Systems 
 courseGraph.assignARate("CSE 4503", 76);
-courseGraph.addCourse("CSE 4633", ["CSE 2383"]);
+courseGraph.addCourse("CSE 4613", []); //Bio Computing
+courseGraph.assignARate("CSE 4613", 28);
+courseGraph.addCourse("CSE 4633", ["CSE 2383", "CSE 2813"]); //Artificial Intelligence
 courseGraph.assignARate("CSE 4633", 76);
-courseGraph.addCourse("CSE 4643", ["CSE 2383"]);
+courseGraph.addCourse("CSE 4643", ["CSE 2383"]); //AI Robotics
 courseGraph.assignARate("CSE 4643", 73);
-courseGraph.addCourse("CSE 4653", ["CSE 4633"]);
+courseGraph.addCourse("CSE 4653", ["CSE 4633"]); //Cognitive Science
 courseGraph.assignARate("CSE 4653", 29);
-courseGraph.addCourse("CSE 4663", [], 3); 
+courseGraph.addCourse("CSE 4663", [], 3);  //Human Computer Interaction
 courseGraph.assignARate("CSE 4663", 97);
-courseGraph.addCourse("CSE 4683", ["IE 4613"]); //has other 1 off requirements, only 1 is needed
-courseGraph.addCourse("CSE 4693", ["IE 4613"]);
+courseGraph.addCourse("CSE 4683", ["IE 4613"]); //Machine Learning and Soft Comp. has other 1 off requirements, only 1 is needed
+courseGraph.addCourse("CSE 4693", ["IE 4613"]); //Intro to Machine Learning
 courseGraph.assignARate("CSE 4693", 54);
-courseGraph.addCourse("CSE 4714", ["CSE 3723"]);
+courseGraph.addCourse("CSE 4714", ["CSE 3723", "CSE 2383"]); //Theory and Implementation of Prog Lang
 courseGraph.assignARate("CSE 4714", 42);
-courseGraph.addCourse("CSE 4743", ["CSE 4733"]);
-courseGraph.addCourse("CSE 4773", []);
+courseGraph.addCourse("CSE 4743", ["CSE 4733"]); //Operating Systems II
+courseGraph.addCourse("CSE 4773", []); //Intro to Cyber Ops
 courseGraph.assignARate("CSE 4773", 84);
-courseGraph.addCourse("CSE 4783", ["CSE 2383"]);
+courseGraph.addCourse("CSE 4783", ["CSE 2383"]); //Cloud Computing and Security
 courseGraph.assignARate("CSE 4783", 84);
