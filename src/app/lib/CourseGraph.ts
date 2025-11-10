@@ -92,8 +92,11 @@ export class CourseGraph {
             .sort((a, b) => b[1] - a[1]) // Sort by impact (higher = more important)
             .map(([course]) => ({
                 course,
-                aRate: `${this.courseARate[course] || 0}%`
+                aRate: this.courseARate[course] !== undefined
+                    ? `${this.courseARate[course]}%`
+                    : "Not available"
             }));
+
     }
 }
 
