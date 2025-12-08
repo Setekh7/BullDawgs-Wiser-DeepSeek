@@ -19,7 +19,7 @@ export class CourseGraph {
         if (!this.inDegree[course]) this.inDegree[course] = 0;
 
         this.yearRequirement[course] = yearReq;
-        this.semesterAvailability[course] = semester; // NEW
+        this.semesterAvailability[course] = semester; 
 
         prerequisites.forEach(pre => {
             if (!this.graph[pre]) this.graph[pre] = [];
@@ -99,7 +99,7 @@ export class CourseGraph {
                 this.inDegree[course] === 0 &&
                 !completedCourses.includes(course) &&
                 (this.yearRequirement[course] === null || this.yearRequirement[course] <= currentYear) &&
-                isAvailableThisSemester(course) // NEW
+                isAvailableThisSemester(course) 
             ) {
                 available.set(course, countDependencies(course));
             }
@@ -114,7 +114,7 @@ export class CourseGraph {
                     if (
                         localInDegree[nextCourse] === 0 &&
                         (this.yearRequirement[nextCourse] === null || this.yearRequirement[nextCourse] <= currentYear) &&
-                        isAvailableThisSemester(nextCourse) // NEW
+                        isAvailableThisSemester(nextCourse) 
                     ) {
                         available.set(nextCourse, countDependencies(nextCourse));
                     }
@@ -127,10 +127,10 @@ export class CourseGraph {
             .sort((a, b) => b[1] - a[1])
             .map(([course]) => ({
                 course,
-                semester: this.semesterAvailability[course], // NEW
+                semester: this.semesterAvailability[course], 
                 aRate: this.courseARate[course] !== undefined
                     ? `${this.courseARate[course]}%`
-                    : "Not available"
+                    : "Not available" //If A rate doesn't exist show NA instead of 0%
             }));
     }
 }
